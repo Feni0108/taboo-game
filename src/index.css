@@ -1,7 +1,7 @@
 :root {
-  --background-color: #a5e6ba;
+  --background-color: #d35f6c;
   --card-heading-color: #5b2a86;
-  --card-body-color: #9ac6c5;
+  --card-body-color: white;
   --list-elements-color: #360568;
   --card-heading-text-color: white;
   --main-font: "Antonio", sans-serif;
@@ -27,7 +27,6 @@ body {
 .main-box {
   margin: auto auto;
   font-family: var(--main-font);
-  width: 350px;
 }
 
 h1 {
@@ -61,4 +60,91 @@ li {
   background-position: bottom right;
   background-size: 400px auto;
   border: 1px solid white;
+  width: 350px;
+}
+
+.button-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 450px;
+  padding: 60px 0px;
+  margin: 0 auto;
+}
+
+.icon-button {
+  position: relative; /* anchors the badge to this button */
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.icon-button img {
+  width: 90px;
+  height: 90px;
+}
+
+.icon-button .taboo-img {
+  width: 120px;
+  height: 120px;
+}
+
+.badge {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  background-color: orange;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--main-font);
+}
+
+@media (max-width: 500px) {
+  .main-box {
+    width: 400px;
+  }
+
+  h1 {
+    font-size: 28px;
+    letter-spacing: 5px;
+    padding: 14px;
+  }
+
+  li {
+    padding: 12px;
+    font-size: 18px;
+  }
+
+  .card-box {
+    width: 230px;
+    background-size: 230px auto;
+  }
+
+  .button-box {
+    width: 300px;
+  }
+  .icon-button {
+    margin: 3px;
+  }
+  .icon-button img {
+    width: 70px;
+    height: 70px;
+  }
+  .icon-button .taboo-img {
+    width: 90px;
+    height: 90px;
+  }
+  .badge {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
 }
