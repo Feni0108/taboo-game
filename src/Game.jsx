@@ -5,6 +5,8 @@ import skipIcon from "./assets/skipIcon.png";
 import tabooIcon from "./assets/tabooIcon.png";
 import passIcon from "./assets/passIcon.png";
 
+const TOTAL_TIME = 60;
+
 function Game() {
   // A megkevert pakli - csak egyszer keverjük meg, amikor a komponens elindul
   const [deck, setDeck] = useState(() => shuffleCards(cards));
@@ -18,7 +20,13 @@ function Game() {
   // Skip counter
   const [skipsLeft, setSkipsLeft] = useState(2); // starting limit
 
-  const [timer, setTimer] = useState(3);
+  const [timer, setTimer] = useState(TOTAL_TIME);
+
+  // ---- Timer ring calculations ----
+  const radius = 35;
+  const circumference = 2 * Math.PI * radius;
+  const progress = timer / TOTAL_TIME;
+  const strokeDashoffset = circumference * (1 - progress);
 
   function handleNext() {
     const nextIndex = currentIndex + 1;
@@ -56,7 +64,30 @@ function Game() {
   return (
     <div className="main-box">
       <div className="timer-box">
-        <h2>{timer}</h2>
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle
+            cx="60"
+            cy="60"
+            r={radius}
+            fill="none"
+            stroke="#e5e4e7"
+            strokeWidth="5"
+            className="basic-circle"
+          />
+          <circle
+            cx="60"
+            cy="60"
+            r={radius}
+            fill="none"
+            stroke="white"
+            strokeWidth="5"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            className="timer-progress-circle"
+          />
+        </svg>
+        <span className="timer-number">{timer}</span>
       </div>
       <div className="card-box">
         <h1>{currentCard.word}</h1>
