@@ -5,7 +5,7 @@ import skipIcon from "./assets/skipIcon.png";
 import tabooIcon from "./assets/tabooIcon.png";
 import passIcon from "./assets/passIcon.png";
 
-const TOTAL_TIME = 60;
+const TOTAL_TIME = 3;
 
 function Game() {
   // A megkevert pakli - csak egyszer keverjük meg, amikor a komponens elindul
@@ -21,6 +21,8 @@ function Game() {
   const [skipsLeft, setSkipsLeft] = useState(2); // starting limit
 
   const [timer, setTimer] = useState(TOTAL_TIME);
+
+  const [gamePhase, setGamePhase] = useState("playing"); // "playing" | "roundOver"
 
   // ---- Timer ring calculations ----
   const radius = 35;
@@ -53,6 +55,7 @@ function Game() {
           return prevTimer - 1;
         } else {
           clearInterval(interval);
+          setGamePhase("roundOver"); // ← trigger the transition here
           return 0;
         }
       });
@@ -62,55 +65,66 @@ function Game() {
   }, []);
 
   return (
-    <div className="main-box">
-      <div className="timer-box">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle
-            cx="60"
-            cy="60"
-            r={radius}
-            fill="none"
-            stroke="#e5e4e7"
-            strokeWidth="5"
-            className="basic-circle"
-          />
-          <circle
-            cx="60"
-            cy="60"
-            r={radius}
-            fill="none"
-            stroke="white"
-            strokeWidth="5"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap="round"
-            className="timer-progress-circle"
-          />
-        </svg>
-        <span className="timer-number">{timer}</span>
-      </div>
-      <div className="card-box">
-        <h1>{currentCard.word}</h1>
-        <ul>
-          {currentCard.taboo.map((t, i) => (
-            <li key={i}>{t}</li>
-          ))}
-        </ul>
-      </div>
-      <div className="button-box">
-        <button className="icon-button skip-button" onClick={handleSkip}>
-          <img src={skipIcon} alt="Skip" />
-          <span className="badge">{skipsLeft}</span>
-        </button>
+    <div>
+      {gamePhase === "playing" && (
+        <div className="main-box">
+          <div className="timer-box">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle
+                cx="60"
+                cy="60"
+                r={radius}
+                fill="none"
+                stroke="#e5e4e7"
+                strokeWidth="5"
+                className="basic-circle"
+              />
+              <circle
+                cx="60"
+                cy="60"
+                r={radius}
+                fill="none"
+                stroke="white"
+                strokeWidth="5"
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                strokeLinecap="round"
+                className="timer-progress-circle"
+              />
+            </svg>
+            <span className="timer-number">{timer}</span>
+          </div>
+          <div className="card-box">
+            <h1>{currentCard.word}</h1>
+            <ul>
+              {currentCard.taboo.map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="button-box">
+            <button className="icon-button skip-button" onClick={handleSkip}>
+              <img src={skipIcon} alt="Skip" />
+              <span className="badge">{skipsLeft}</span>
+            </button>
 
-        <button className="icon-button taboo-button">
-          <img src={tabooIcon} alt="Taboo" className="taboo-img" />
-        </button>
+            <button className="icon-button taboo-button">
+              <img src={tabooIcon} alt="Taboo" className="taboo-img" />
+            </button>
 
-        <button className="icon-button pass-button" onClick={handleNext}>
-          <img src={passIcon} alt="Correct" />
-        </button>
-      </div>
+            <button className="icon-button pass-button" onClick={handleNext}>
+              <img src={passIcon} alt="Correct" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {gamePhase === "roundOver" && (
+        <div className="results-box">
+          <h1>Round Over!</h1>
+          <p>Cards seen: {currentIndex + 1}</p>
+        </div>
+      )}
     </div>
   );
 }
