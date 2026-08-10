@@ -84,16 +84,30 @@ li {
   background: none;
   cursor: pointer;
   margin: 10px;
+
+  transition: transform 0.1s ease;
 }
 
 .icon-button img {
   width: clamp(50px, 18vw, 90px);
   height: clamp(50px, 18vw, 90px);
+
+  transition:
+    transform 0.1s ease,
+    filter 0.1s ease;
 }
 
 .icon-button .taboo-img {
   width: clamp(65px, 28vw, 120px);
   height: clamp(65px, 28vw, 120px);
+}
+
+.icon-button:active {
+  transform: scale(0.88) translateY(3px);
+}
+
+.icon-button:active img {
+  filter: brightness(0.7);
 }
 
 .badge {
