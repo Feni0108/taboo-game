@@ -31,6 +31,7 @@ body {
 .main-box {
   margin: auto auto;
   font-family: var(--main-font);
+  perspective: 1000px;
 }
 
 h1 {

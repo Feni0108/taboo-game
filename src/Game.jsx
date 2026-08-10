@@ -4,6 +4,7 @@ import { shuffleCards } from "./gameLogic.js";
 import skipIcon from "./assets/skipIcon.png";
 import tabooIcon from "./assets/tabooIcon.png";
 import passIcon from "./assets/passIcon.png";
+import { AnimatePresence, motion } from "framer-motion";
 
 function Game() {
   // A megkevert pakli - csak egyszer keverjük meg, amikor a komponens elindul
@@ -39,6 +40,12 @@ function Game() {
   function handleStart() {
     setTimer(totalTime);
     setGamePhase("playing");
+    setCorrectCards([]);
+    setSkippedCards([]);
+    setTabooCards([]);
+    setSkipsLeft(2);
+    setDeck(shuffleCards(cards));
+    setCurrentIndex(0);
   }
 
   function handleNewStart() {
@@ -59,18 +66,18 @@ function Game() {
 
   function handleSkip() {
     if (skipsLeft <= 0) return; // no skips left, do nothing
-    setSkipsLeft(skipsLeft - 1);
-    setSkippedCards([...skippedCards, currentCard]);
+    setSkipsLeft((prev) => prev - 1);
+    setSkippedCards((prev) => [...prev, currentCard]);
     handleNext(); // reuse your existing "go to next card" logic
   }
 
   function handleCorrect() {
-    setCorrectCards([...correctCards, currentCard]);
+    setCorrectCards((prev) => [...prev, currentCard]);
     handleNext();
   }
 
   function handleTaboo() {
-    setTabooCards([...tabooCards, currentCard]);
+    setTabooCards((prev) => [...prev, currentCard]);
     handleNext();
   }
 
@@ -124,7 +131,7 @@ function Game() {
             <option value={180}>⌛ 180 seconds</option>
           </select>
 
-          <button className="start-button" onClick={handleStart}>
+          <button type="submit" className="start-button" onClick={handleStart}>
             Start
           </button>
         </div>
@@ -158,20 +165,42 @@ function Game() {
             </svg>
             <span className="timer-number">{timer}</span>
           </div>
-          <div className="card-box">
-            <CardDom card={currentCard} className="card-box" />
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              className="card-box"
+              key={currentIndex}
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 300, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <CardDom card={currentCard} />
+            </motion.div>
+          </AnimatePresence>
           <div className="button-box">
-            <button className="icon-button skip-button" onClick={handleSkip}>
+            <button
+              type="submit"
+              className="icon-button skip-button"
+              onClick={handleSkip}
+            >
               <img src={skipIcon} alt="Skip" />
               <span className="badge">{skipsLeft}</span>
             </button>
 
-            <button className="icon-button taboo-button" onClick={handleTaboo}>
+            <button
+              type="submit"
+              className="icon-button taboo-button"
+              onClick={handleTaboo}
+            >
               <img src={tabooIcon} alt="Taboo" className="taboo-img" />
             </button>
 
-            <button className="icon-button pass-button" onClick={handleCorrect}>
+            <button
+              type="submit"
+              className="icon-button pass-button"
+              onClick={handleCorrect}
+            >
               <img src={passIcon} alt="Correct" />
             </button>
           </div>
