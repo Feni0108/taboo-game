@@ -31,6 +31,8 @@ function Game() {
 
   const [tabooCards, setTabooCards] = useState([]);
 
+  const [stamp, setStamp] = useState(null);
+
   // ---- Timer ring calculations ----
   const radius = 35;
   const circumference = 2 * Math.PI * radius;
@@ -65,19 +67,26 @@ function Game() {
   }
 
   function handleSkip() {
-    if (skipsLeft <= 0) return; // no skips left, do nothing
+    if (skipsLeft <= 0 || stamp) return; // no skips left, do nothing
     setSkipsLeft((prev) => prev - 1);
     setSkippedCards((prev) => [...prev, currentCard]);
-    handleNext(); // reuse your existing "go to next card" logic
+    setStamp("skip");
   }
 
   function handleCorrect() {
+    if (stamp) return;
+
     setCorrectCards((prev) => [...prev, currentCard]);
-    handleNext();
+    setStamp("correct");
   }
 
   function handleTaboo() {
     setTabooCards((prev) => [...prev, currentCard]);
+    setStamp("taboo");
+  }
+
+  function finishCardAction() {
+    setStamp(null);
     handleNext();
   }
 
@@ -99,6 +108,16 @@ function Game() {
 
     return () => clearInterval(interval);
   }, [gamePhase]);
+
+  useEffect(() => {
+    if (!stamp) return;
+
+    const timeout = setTimeout(() => {
+      finishCardAction();
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  }, [stamp]);
 
   function CardDom({ card, className, icon }) {
     return (
@@ -173,9 +192,40 @@ function Game() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 300, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              style={{ transformStyle: "preserve-3d" }}
             >
               <CardDom card={currentCard} />
+
+              <AnimatePresence>
+                {stamp && (
+                  <motion.div
+                    className={`stamp stamp-${stamp}`}
+                    initial={{
+                      x: "-50%",
+                      y: "-50%",
+                      scale: 2,
+                      rotate: -20,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      scale: 1,
+                      rotate: -10,
+                      opacity: 1,
+                    }}
+                    exit={{
+                      scale: 1.2,
+                      opacity: 0,
+                    }}
+                    transition={{
+                      duration: 0.25,
+                      ease: "backOut",
+                    }}
+                  >
+                    {stamp === "correct" && "CORRECT"}
+                    {stamp === "skip" && "SKIP"}
+                    {stamp === "taboo" && "TABOO"}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           </AnimatePresence>
           <div className="button-box">

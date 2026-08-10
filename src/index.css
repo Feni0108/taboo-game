@@ -66,6 +66,7 @@ li {
   background-size: clamp(300px, 80vw, 400px) auto;
   border: 1px solid white;
   width: clamp(230px, 60vw, 350px);
+  position: relative;
 }
 
 .button-box {
@@ -275,4 +276,40 @@ li {
   padding: clamp(6px, 20vw, 10px);
   margin: 0;
   text-transform: uppercase;
+}
+
+.stamp {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%) rotate(-10deg);
+
+  font-size: clamp(2rem, 12vw, 4rem);
+  font-weight: 900;
+
+  padding: clamp(8px, 2vw, 15px) clamp(16px, 4vw, 35px);
+
+  border: clamp(4px, 1vw, 8px) solid;
+  border-radius: 15px;
+
+  z-index: 100;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.stamp-correct {
+  color: #27ae60;
+  border-color: #27ae60;
+}
+
+.stamp-skip {
+  color: #f39c12;
+  border-color: #f39c12;
+}
+
+.stamp-taboo {
+  color: #e74c3c;
+  border-color: #e74c3c;
 }
