@@ -498,6 +498,396 @@ const cards = [
       "vonyítás",
       "vad"
     ]
+  },
+  {
+    "word": "Televízió",
+    "taboo": [
+      "film",
+      "nézés",
+      "képernyő",
+      "távírányító",
+      "műsor"
+    ]
+  },
+  {
+    "word": "Esernyő",
+    "taboo": [
+      "eső",
+      "víz",
+      "időjárás",
+      "fogantyú",
+      "védekezés"
+    ]
+  },
+  {
+    "word": "Porszívó",
+    "taboo": [
+      "por",
+      "takarítás",
+      "szőnyeg",
+      "szív",
+      "háztartás"
+    ]
+  },
+  {
+    "word": "Fogkefe",
+    "taboo": [
+      "fog",
+      "mosás",
+      "fogkrém",
+      "fürdőszoba",
+      "száj"
+    ]
+  },
+  {
+    "word": "Ágy",
+    "taboo": [
+      "alvás",
+      "párna",
+      "takaró",
+      "hálószoba",
+      "matrac"
+    ]
+  },
+  {
+    "word": "Tükör",
+    "taboo": [
+      "kép",
+      "néz",
+      "arc",
+      "visszatükröződés",
+      "üveg"
+    ]
+  },
+  {
+    "word": "Óra",
+    "taboo": [
+      "idő",
+      "perc",
+      "mutató",
+      "fal",
+      "kakukkos"
+    ]
+  },
+  {
+    "word": "Bőrönd",
+    "taboo": [
+      "utazás",
+      "ruha",
+      "repülő",
+      "csomag",
+      "nyaralás"
+    ]
+  },
+  {
+    "word": "Hamburger",
+    "taboo": [
+      "hús",
+      "buci",
+      "étterem",
+      "sajt",
+      "McDonalds"
+    ]
+  },
+  {
+    "word": "Palacsinta",
+    "taboo": [
+      "lekvár",
+      "túró",
+      "tészta",
+      "süt",
+      "kakaó"
+    ]
+  },
+  {
+    "word": "Fagylalt",
+    "taboo": [
+      "hideg",
+      "nyári",
+      "tölcsér",
+      "gombóc",
+      "kehely"
+    ]
+  },
+  {
+    "word": "Csokoládé",
+    "taboo": [
+      "édesség",
+      "kakaó",
+      "tej",
+      "barna",
+      "cukor"
+    ]
+  },
+  {
+    "word": "Görögdinnye",
+    "taboo": [
+      "nyár",
+      "piros",
+      "lédús",
+      "mag",
+      "zöld"
+    ]
+  },
+  {
+    "word": "Pingvin",
+    "taboo": [
+      "fekete",
+      "fehér",
+      "jég",
+      "Antarktisz",
+      "madár"
+    ]
+  },
+  {
+    "word": "Delfin",
+    "taboo": [
+      "tenger",
+      "víz",
+      "úszik",
+      "emlős",
+      "intelligens"
+    ]
+  },
+  {
+    "word": "Krokodil",
+    "taboo": [
+      "víz",
+      "fog",
+      "zöld",
+      "veszélyes",
+      "folyó"
+    ]
+  },
+  {
+    "word": "Pillangó",
+    "taboo": [
+      "szárny",
+      "repül",
+      "virág",
+      "rovar",
+      "színes"
+    ]
+  },
+  {
+    "word": "Méhecske",
+    "taboo": [
+      "méz",
+      "virág",
+      "fullánk",
+      "kaptár",
+      "sárga"
+    ]
+  },
+  {
+    "word": "Polip",
+    "taboo": [
+      "tenger",
+      "kar",
+      "nyolc",
+      "víz",
+      "csáp"
+    ]
+  },
+  {
+    "word": "Cápa",
+    "taboo": [
+      "tenger",
+      "fog",
+      "veszélyes",
+      "hal",
+      "úszik"
+    ]
+  },
+  {
+    "word": "Bohóc",
+    "taboo": [
+      "cirkusz",
+      "vicces",
+      "orr",
+      "smink",
+      "piros"
+    ]
+  },
+  {
+    "word": "Kalóz",
+    "taboo": [
+      "hajó",
+      "tenger",
+      "kincs",
+      "szemkötő",
+      "Johnny Depp"
+    ]
+  },
+  {
+    "word": "Szellem",
+    "taboo": [
+      "halott",
+      "átlátszó",
+      "Casper",
+      "kísértet",
+      "ijesztő"
+    ]
+  },
+  {
+    "word": "Robot",
+    "taboo": [
+      "gép",
+      "mesterséges",
+      "fém",
+      "program",
+      "R2D2"
+    ]
+  },
+  {
+    "word": "Űrhajós",
+    "taboo": [
+      "űr",
+      "rakéta",
+      "Hold",
+      "Nasa",
+      "szkafander"
+    ]
+  },
+  {
+    "word": "Detektív",
+    "taboo": [
+      "nyomoz",
+      "rendőr",
+      "bűn",
+      "Sherlock",
+      "rejtély"
+    ]
+  },
+  {
+    "word": "Kalapács",
+    "taboo": [
+      "szög",
+      "üt",
+      "barkács",
+      "fa",
+      "szerszám"
+    ]
+  },
+  {
+    "word": "Kincsesláda",
+    "taboo": [
+      "kincs",
+      "arany",
+      "kalóz",
+      "pénz",
+      "rejtett"
+    ]
+  },
+  {
+    "word": "Időgép",
+    "taboo": [
+      "idő",
+      "múlt",
+      "jövő",
+      "utazás",
+      "gép"
+    ]
+  },
+  {
+    "word": "Minecraft",
+    "taboo": [
+      "játék",
+      "kocka",
+      "építés",
+      "számítógép",
+      "gyerekek"
+    ]
+  },
+  {
+    "word": "Foci",
+    "taboo": [
+      "labda",
+      "kapu",
+      "gól",
+      "stadion",
+      "Világbajnokság"
+    ]
+  },
+  {
+    "word": "Karaoke",
+    "taboo": [
+      "éneklés",
+      "mikrofon",
+      "buli",
+      "szöveg",
+      "színpad"
+    ]
+  },
+  {
+    "word": "Diszkó",
+    "taboo": [
+      "tánc",
+      "zene",
+      "fény",
+      "buli",
+      "klub"
+    ]
+  },
+  {
+    "word": "Strand",
+    "taboo": [
+      "nyár",
+      "víz",
+      "fürdés",
+      "napozás",
+      "medence"
+    ]
+  },
+  {
+    "word": "Repülőtér",
+    "taboo": [
+      "repülő",
+      "utazás",
+      "poggyász",
+      "indulás",
+      "terminál"
+    ]
+  },
+  {
+    "word": "Szálloda",
+    "taboo": [
+      "hotel",
+      "szoba",
+      "alvás",
+      "recepció",
+      "nyaralás"
+    ]
+  },
+  {
+    "word": "Esküvő",
+    "taboo": [
+      "menyasszony",
+      "vőlegény",
+      "házasság",
+      "gyűrű",
+      "lagzi"
+    ]
+  },
+  {
+    "word": "Születésnap",
+    "taboo": [
+      "torta",
+      "ajándék",
+      "kor",
+      "ünneplés",
+      "gyertya"
+    ]
+  },
+  {
+    "word": "Karácsonyfa",
+    "taboo": [
+      "karácsony",
+      "dísz",
+      "gömb",
+      "ajándék",
+      "fenyő"
+    ]
   }
 ];
 
