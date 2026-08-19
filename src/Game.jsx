@@ -5,6 +5,7 @@ import skipIcon from "./assets/skipIcon.png";
 import tabooIcon from "./assets/tabooIcon.png";
 import passIcon from "./assets/passIcon.png";
 import { AnimatePresence, motion } from "framer-motion";
+import CardDom from "./CardDom.jsx";
 
 function Game() {
   // A megkevert pakli - csak egyszer keverjük meg, amikor a komponens elindul
@@ -18,34 +19,30 @@ function Game() {
 
   // Skip counter
   const [skipsLeft, setSkipsLeft] = useState(2); // starting limit
-
-  const [totalTime, setTotalTime] = useState(60);
-
-  const [timer, setTimer] = useState(totalTime);
-
+  const [turnTime, setTurnTime] = useState(150); // 2m 30s default
+  const [numberOfRounds, setNumberOfRounds] = useState(2);
+  const [freePasses, setFreePasses] = useState(5);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [timer, setTimer] = useState(turnTime);
   const [gamePhase, setGamePhase] = useState("start"); // "start" | "playing" | "roundOver"
-
   const [correctCards, setCorrectCards] = useState([]);
-
   const [skippedCards, setSkippedCards] = useState([]);
-
   const [tabooCards, setTabooCards] = useState([]);
-
   const [stamp, setStamp] = useState(null);
 
   // ---- Timer ring calculations ----
   const radius = 35;
   const circumference = 2 * Math.PI * radius;
-  const progress = timer / totalTime;
+  const progress = timer / turnTime;
   const strokeDashoffset = circumference * (1 - progress);
 
   function handleStart() {
-    setTimer(totalTime);
+    setTimer(turnTime);
     setGamePhase("playing");
     setCorrectCards([]);
     setSkippedCards([]);
     setTabooCards([]);
-    setSkipsLeft(2);
+    setSkipsLeft(freePasses);
     setDeck(shuffleCards(cards));
     setCurrentIndex(0);
   }
@@ -119,40 +116,112 @@ function Game() {
     return () => clearTimeout(timeout);
   }, [stamp]);
 
-  function CardDom({ card, className, icon }) {
-    return (
-      <div className={className}>
-        <h1>{card.word}</h1>
-        <ul>
-          {card.taboo.map((t, i) => (
-            <li key={i}>{t}</li>
-          ))}
-        </ul>
-        {icon && <img src={icon} alt="" className="result-icon-overlay" />}
-      </div>
-    );
-  }
-
   return (
     <div>
       {gamePhase === "start" && (
         <div className="start-page">
-          <select
-            className="time-select"
-            value={totalTime}
-            onChange={(e) => setTotalTime(Number(e.target.value))}
+          <button
+            className="settings-summary-button"
+            onClick={() => setIsSettingsOpen(true)}
+            type="submit"
           >
-            <option value={30}>⌛ 30 seconds</option>
-            <option value={60}>⌛ 60 seconds</option>
-            <option value={90}>⌛ 90 seconds</option>
-            <option value={120}>⌛ 120 seconds</option>
-            <option value={150}>⌛ 150 seconds</option>
-            <option value={180}>⌛ 180 seconds</option>
-          </select>
+            <span>
+              ⏱ {Math.floor(turnTime / 60)}m {turnTime % 60}s
+            </span>
+            <span>🔄 {numberOfRounds}</span>
+            <span>➜ {freePasses}</span>
+          </button>
 
           <button type="submit" className="start-button" onClick={handleStart}>
             Start
           </button>
+
+          {isSettingsOpen && (
+            <div
+              className="modal-overlay"
+              onClick={() => setIsSettingsOpen(false)}
+            >
+              <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+                <button
+                  className="modal-close"
+                  onClick={() => setIsSettingsOpen(false)}
+                  type="submit"
+                >
+                  ✕
+                </button>
+                <h2>Customise your game!</h2>
+
+                <div className="setting-row">
+                  <label>⏱ Turn time limit</label>
+                  <div className="stepper">
+                    <button
+                      onClick={() => setTurnTime(Math.max(15, turnTime - 15))}
+                      type="submit"
+                    >
+                      −
+                    </button>
+                    <span>
+                      {Math.floor(turnTime / 60)}m {turnTime % 60}s
+                    </span>
+                    <button
+                      onClick={() => setTurnTime(turnTime + 15)}
+                      type="submit"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div className="setting-row">
+                  <label>🔄 Number of rounds</label>
+                  <div className="stepper">
+                    <button
+                      onClick={() =>
+                        setNumberOfRounds(Math.max(1, numberOfRounds - 1))
+                      }
+                      type="submit"
+                    >
+                      −
+                    </button>
+                    <span>{numberOfRounds}</span>
+                    <button
+                      onClick={() => setNumberOfRounds(numberOfRounds + 1)}
+                      type="submit"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div className="setting-row">
+                  <label>➜ Free passes</label>
+                  <div className="stepper">
+                    <button
+                      onClick={() => setFreePasses(Math.max(0, freePasses - 1))}
+                      type="submit"
+                    >
+                      −
+                    </button>
+                    <span>{freePasses}</span>
+                    <button
+                      onClick={() => setFreePasses(freePasses + 1)}
+                      type="submit"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  className="modal-ready-button"
+                  onClick={() => setIsSettingsOpen(false)}
+                  type="submit"
+                >
+                  Ready
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
