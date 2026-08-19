@@ -29,6 +29,9 @@ function Game() {
   const [skippedCards, setSkippedCards] = useState([]);
   const [tabooCards, setTabooCards] = useState([]);
   const [stamp, setStamp] = useState(null);
+  const [players, setPlayers] = useState([]);
+  const [newPlayerName, setNewPlayerName] = useState("");
+  const [startError, setStartError] = useState("");
 
   // ---- Timer ring calculations ----
   const radius = 35;
@@ -37,6 +40,12 @@ function Game() {
   const strokeDashoffset = circumference * (1 - progress);
 
   function handleStart() {
+    if (players.length < 2) {
+      setStartError("Legalább két játékosra lesz szükséged!");
+      return;
+    }
+    setStartError("");
+
     setTimer(turnTime);
     setGamePhase("playing");
     setCorrectCards([]);
@@ -116,10 +125,47 @@ function Game() {
     return () => clearTimeout(timeout);
   }, [stamp]);
 
+  function handleAddPlayer() {
+    if (newPlayerName.trim() === "") return;
+    setPlayers([...players, { name: newPlayerName.trim(), score: 0 }]);
+    setNewPlayerName("");
+    setStartError(""); // clear any lingering error once they've added someone
+  }
+
+  function handleRemovePlayer(indexToRemove) {
+    setPlayers(players.filter((_, i) => i !== indexToRemove));
+  }
+
   return (
     <div>
       {gamePhase === "start" && (
         <div className="start-page">
+          {startError && <p className="start-error">{startError}</p>}
+          <div className="players-box">
+            <h3>Játékosok</h3>
+            <ul className="players-list">
+              {players.map((player, i) => (
+                <li key={i} className="player-item">
+                  <span>{player.name}</span>
+                  <button type="button" onClick={() => handleRemovePlayer(i)}>
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <div className="add-player-row">
+              <input
+                type="text"
+                value={newPlayerName}
+                onChange={(e) => setNewPlayerName(e.target.value)}
+                placeholder="Játékos neve"
+              />
+              <button type="button" onClick={handleAddPlayer}>
+                Új játékos
+              </button>
+            </div>
+          </div>
           <button
             className="settings-summary-button"
             onClick={() => setIsSettingsOpen(true)}
