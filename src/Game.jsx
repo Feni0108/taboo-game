@@ -24,7 +24,7 @@ function Game() {
   const [freePasses, setFreePasses] = useState(5);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [timer, setTimer] = useState(turnTime);
-  const [gamePhase, setGamePhase] = useState("start"); // "start" | "playing" | "roundOver"
+  const [gamePhase, setGamePhase] = useState("start"); // "start" | "turnIntro" | "playing" | "turnResults" | "gameOver"
   const [correctCards, setCorrectCards] = useState([]);
   const [skippedCards, setSkippedCards] = useState([]);
   const [tabooCards, setTabooCards] = useState([]);
@@ -32,6 +32,9 @@ function Game() {
   const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
   const [startError, setStartError] = useState("");
+  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+  const [currentRound, setCurrentRound] = useState(1);
+  const [introCountdown, setIntroCountdown] = useState(5);
 
   // ---- Timer ring calculations ----
   const radius = 35;
@@ -39,32 +42,46 @@ function Game() {
   const progress = timer / turnTime;
   const strokeDashoffset = circumference * (1 - progress);
 
+  // ---- Winner / tie calculations ----
+  const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+  const topScore = sortedPlayers.length > 0 ? sortedPlayers[0].score : 0;
+  const winners = sortedPlayers.filter((player) => player.score === topScore);
+  const isTie = winners.length > 1;
+
+  // ---- Change buttons in the rounds ----
+  const isLastPlayerOfRound = currentPlayerIndex + 1 >= players.length;
+  const isLastRound = currentRound >= numberOfRounds;
+
+  let continueButtonLabel = "Következő játékos";
+  if (isLastPlayerOfRound && isLastRound) {
+    continueButtonLabel = "Eredmény";
+  } else if (isLastPlayerOfRound) {
+    continueButtonLabel = "Következő kör";
+  }
+
   function handleStart() {
     if (players.length < 2) {
-      setStartError("Legalább két játékosra lesz szükséged!");
+      setStartError(
+        "Legalább két játékosra lesz szükség a játék megkezdéséhez!",
+      );
       return;
     }
     setStartError("");
 
-    setTimer(turnTime);
-    setGamePhase("playing");
-    setCorrectCards([]);
-    setSkippedCards([]);
-    setTabooCards([]);
-    setSkipsLeft(freePasses);
-    setDeck(shuffleCards(cards));
+    setPlayers((prev) => prev.map((p) => ({ ...p, score: 0 })));
+    setCurrentRound(1);
+    setCurrentPlayerIndex(0);
+    setDeck(shuffleCards(cards)); // shuffled ONCE for the whole game
     setCurrentIndex(0);
-  }
-
-  function handleNewStart() {
-    setGamePhase("start");
+    setGamePhase("turnIntro");
   }
 
   function handleNext() {
     const nextIndex = currentIndex + 1;
 
     if (nextIndex >= deck.length) {
-      // Elfogyott a pakli - keverjük újra, kezdjük elölről
+      // Genuinely ran out of unique cards across the whole game
+      // Only reshuffle the ORIGINAL full list as a last resort
       setDeck(shuffleCards(cards));
       setCurrentIndex(0);
     } else {
@@ -106,7 +123,7 @@ function Game() {
           return prevTimer - 1;
         } else {
           clearInterval(interval);
-          setGamePhase("roundOver"); // ← trigger the transition here
+          setGamePhase("turnResults"); // was "roundOver"
           return 0;
         }
       });
@@ -125,15 +142,95 @@ function Game() {
     return () => clearTimeout(timeout);
   }, [stamp]);
 
+  useEffect(() => {
+    if (gamePhase !== "turnIntro") return;
+
+    setIntroCountdown(5);
+
+    const interval = setInterval(() => {
+      setIntroCountdown((prev) => {
+        if (prev > 1) {
+          return prev - 1;
+        } else {
+          clearInterval(interval);
+          // begin the actual turn
+          setTimer(turnTime);
+          setCorrectCards([]);
+          setSkippedCards([]);
+          setTabooCards([]);
+          setSkipsLeft(freePasses);
+          setGamePhase("playing");
+          return 0;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gamePhase]);
+
   function handleAddPlayer() {
-    if (newPlayerName.trim() === "") return;
-    setPlayers([...players, { name: newPlayerName.trim(), score: 0 }]);
+    const trimmedName = newPlayerName.trim();
+
+    if (trimmedName === "") return;
+
+    const nameExists = players.some(
+      (player) => player.name.toLowerCase() === trimmedName.toLowerCase(),
+    );
+
+    if (nameExists) {
+      setStartError("Ezzel a névvel már létezik játékos!");
+      return;
+    }
+
+    setStartError("");
+    setPlayers([...players, { name: trimmedName, score: 0 }]);
     setNewPlayerName("");
-    setStartError(""); // clear any lingering error once they've added someone
   }
 
   function handleRemovePlayer(indexToRemove) {
     setPlayers(players.filter((_, i) => i !== indexToRemove));
+  }
+
+  function handleContinueTurn() {
+    const turnScore = correctCards.length - tabooCards.length;
+
+    // Add this turn's score onto the current player's running total
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player, i) =>
+        i === currentPlayerIndex
+          ? { ...player, score: player.score + turnScore }
+          : player,
+      ),
+    );
+
+    const nextPlayerIndex = currentPlayerIndex + 1;
+
+    if (nextPlayerIndex < players.length) {
+      // Still players left in this round
+      setCurrentPlayerIndex(nextPlayerIndex);
+      setGamePhase("turnIntro");
+    } else {
+      // Everyone has played this round
+      const nextRound = currentRound + 1;
+      if (nextRound <= numberOfRounds) {
+        setCurrentRound(nextRound);
+        setCurrentPlayerIndex(0);
+        setGamePhase("turnIntro");
+      } else {
+        // All rounds complete
+        setGamePhase("gameOver");
+      }
+    }
+  }
+
+  function handleNewGame() {
+    setPlayers([]);
+    setCurrentPlayerIndex(0);
+    setCurrentRound(1);
+    setCorrectCards([]);
+    setSkippedCards([]);
+    setTabooCards([]);
+    setGamePhase("start");
   }
 
   return (
@@ -195,10 +292,10 @@ function Game() {
                 >
                   ✕
                 </button>
-                <h2>Customise your game!</h2>
+                <h2>Játék személyre szabása:</h2>
 
                 <div className="setting-row">
-                  <label>⏱ Turn time limit</label>
+                  <label>⏱ Időkorlát</label>
                   <div className="stepper">
                     <button
                       onClick={() => setTurnTime(Math.max(15, turnTime - 15))}
@@ -219,7 +316,7 @@ function Game() {
                 </div>
 
                 <div className="setting-row">
-                  <label>🔄 Number of rounds</label>
+                  <label>🔄 Körök száma</label>
                   <div className="stepper">
                     <button
                       onClick={() =>
@@ -240,7 +337,7 @@ function Game() {
                 </div>
 
                 <div className="setting-row">
-                  <label>➜ Free passes</label>
+                  <label>➜ Ingyenes passzok száma</label>
                   <div className="stepper">
                     <button
                       onClick={() => setFreePasses(Math.max(0, freePasses - 1))}
@@ -263,11 +360,19 @@ function Game() {
                   onClick={() => setIsSettingsOpen(false)}
                   type="submit"
                 >
-                  Ready
+                  Kész
                 </button>
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {gamePhase === "turnIntro" && (
+        <div className="turn-intro-page">
+          <h2>{currentRound}. Kör</h2>
+          <h1>{players[currentPlayerIndex].name} következik</h1>
+          <p>Készülj! A játék kezdődik {introCountdown}...</p>
         </div>
       )}
 
@@ -372,12 +477,15 @@ function Game() {
         </div>
       )}
 
-      {gamePhase === "roundOver" && (
+      {gamePhase === "turnResults" && (
         <div className="results-box">
           <div className="written-result">
-            <h1>Your Score: {correctCards.length - tabooCards.length}</h1>
-            <h3>Correct answers: {correctCards.length}</h3>
-            <h3>Mistakes: {tabooCards.length}</h3>
+            <h1>
+              {players[currentPlayerIndex].name} pontjai:{" "}
+              {correctCards.length - tabooCards.length}
+            </h1>
+            <h3>Helyes: {correctCards.length}</h3>
+            <h3>Taboo: {tabooCards.length}</h3>
           </div>
           <ul className="results-list">
             {correctCards.map((card, i) => (
@@ -406,10 +514,34 @@ function Game() {
             ))}
           </ul>
           <div className="play-again-button-box">
-            <button className="play-again-button" onClick={handleNewStart}>
-              Play again
+            <button className="play-again-button" onClick={handleContinueTurn}>
+              {continueButtonLabel}
             </button>
           </div>
+        </div>
+      )}
+
+      {gamePhase === "gameOver" && (
+        <div className="game-over-page">
+          <h1>Játék vége!</h1>
+
+          {isTie ? (
+            <h2>🤝 Döntetlen: {winners.map((w) => w.name).join(" & ")}!</h2>
+          ) : (
+            <h2>🏆 Győztes: {winners[0].name}</h2>
+          )}
+
+          <ul className="standings-list">
+            {sortedPlayers.map((player, i) => (
+              <li key={i} className="standing-item">
+                <span>{player.name}</span>
+                <span>{player.score} pont</span>
+              </li>
+            ))}
+          </ul>
+          <button className="start-button" onClick={handleNewGame}>
+            Új játék
+          </button>
         </div>
       )}
     </div>

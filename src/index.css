@@ -222,6 +222,18 @@ li {
   text-align-last: center;
 }
 
+/* After turn results page */
+
+.results-box {
+  min-height: 100svh;
+  background: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 16px;
+  box-sizing: border-box;
+}
+
 .results-list {
   display: flex;
   flex-direction: row;
@@ -278,19 +290,34 @@ li {
   }
 }
 
+.written-result {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 .written-result h1 {
-  background-color: var(--background-color);
+  font-family: var(--main-font);
+  color: var(--card-heading-color);
+  background: linear-gradient(to bottom, #ffffff, #d9d9de);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: clamp(20px, 5vw, 28px);
+  padding: 14px 28px;
+  border-radius: 50px;
+  box-shadow: var(--shadow);
+  margin: 0 0 12px 0;
 }
 
 .written-result h3 {
+  font-family: var(--main-font);
+  color: white;
   font-weight: 500;
-  color: var(--card-heading-text-color);
-  font-size: clamp(14px, 8vw, 22px);
-  letter-spacing: clamp(2px, 1.2vw, 3px);
-  padding: clamp(6px, 20vw, 10px);
-  margin: 0;
-  text-transform: uppercase;
+  font-size: clamp(20px, 3.5vw, 18px);
+  margin: 4px 0;
+  opacity: 0.9;
 }
+
+/* Stamps on the cards */
 
 .stamp {
   position: absolute;
@@ -327,6 +354,8 @@ li {
   color: #e74c3c;
   border-color: #e74c3c;
 }
+
+/* Game customization menu */
 
 .settings-summary-button {
   display: flex;
@@ -455,6 +484,8 @@ li {
   transform: scale(0.97);
 }
 
+/* Player menu */
+
 .players-box {
   background: #f4f2f7;
   border-radius: 28px;
@@ -562,5 +593,127 @@ li {
 }
 
 .start-error {
+  color: white;
+}
+
+/* Turn intro pages */
+
+.turn-intro-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--background-color);
+  text-align: center;
+  padding: 20px;
+}
+
+.turn-intro-page h2 {
+  font-family: var(--main-font);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: clamp(18px, 4vw, 24px);
+  margin: 0;
+  opacity: 0.85;
+}
+
+.turn-intro-page h1 {
+  font-family: var(--main-font);
+  color: white;
+  background: none;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: clamp(32px, 8vw, 48px);
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+}
+
+.turn-intro-page p {
+  font-family: var(--main-font);
+  color: white;
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 16px 32px;
+  border-radius: 50px;
+  margin-top: 10px;
+}
+
+/* Game over / winner page */
+
+.game-over-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: var(--background-color);
+  text-align: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.game-over-page h1 {
+  font-family: var(--main-font);
+  color: white;
+  background: none;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: clamp(28px, 7vw, 40px);
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+}
+
+.game-over-page h2 {
+  font-family: var(--main-font);
+  color: var(--card-heading-color);
+  background: linear-gradient(to bottom, #ffffff, #d9d9de);
+  font-size: clamp(20px, 5vw, 28px);
+  padding: 14px 28px;
+  border-radius: 50px;
+  box-shadow: var(--shadow);
+  margin: 0;
+}
+
+.standings-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: min(360px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.standing-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f4f2f7;
+  border-radius: 50px;
+  padding: 12px 24px;
+  box-shadow: var(--shadow);
+}
+
+.standing-item span {
+  font-family: var(--main-font);
+  color: var(--card-heading-color);
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 700;
+}
+
+.standing-item:first-child {
+  background: linear-gradient(135deg, #5a9df0, #7b5ce0);
+}
+
+.standing-item:first-child span {
   color: white;
 }
